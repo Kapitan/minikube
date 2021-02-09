@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcatdepl
+spec:
+  selector:
+    matchLabels:
+      app: tomcattest
+  template:
+    metadata:
+      labels:
+        app: tomcattest
+    spec:
+      containers:
+      - name: tomcattest
+        image: kapitanmf/tomcat8:manager1.2
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcatservice
+spec:
+  type: NodePort
+  ports:
+  - port: 10080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: tomcattest
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: mlflow-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 100Mi
